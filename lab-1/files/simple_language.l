@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <string>
 #include "y.tab.h"
+
+void TokenError(const char* text);
 %}
 
 %%
@@ -15,10 +17,15 @@
 "="                     { return '='; }
 ":"                     { return ':'; }
 [ \t]                   ;  // skip whitespace
-.|\n                    ; /* ignore all the rest */
+.                       { TokenError(yytext); }
+\n                      ; /* ignore all the rest */
 
 %%
 
 int yywrap() {
     return 1;
+}
+
+void TokenError(const char* text){
+    fprintf(stderr, "Error: token no encontrado '%s'\n", text);
 }
